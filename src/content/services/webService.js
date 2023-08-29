@@ -213,7 +213,7 @@ window.addEventListener('app-mounted', async () => {
       const saveToStorage = { session };
 
       const isGoogleProvider =
-        session?.user?.user_metadata?.iss.includes('googleapis.com');
+        session?.user?.user_metadata?.iss.includes('google.com');
       const { session: currSession, sessionToken: currSessionToken } =
         await browser.storage.local.get(['session', 'sessionToken']);
       if (

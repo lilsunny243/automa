@@ -11,6 +11,9 @@ function getAutomaScript(refData) {
 const ${varName} = ${JSON.stringify(refData)};
 ${automaRefDataStr(varName)}
 function automaSetVariable(name, value) {
+  const variables = ${varName}.variables;
+  if (!variables) ${varName}.variables = {}
+
   ${varName}.variables[name] = value;
 }
 function automaExecWorkflow(options = {}) {
@@ -49,13 +52,15 @@ async function handleCreateElement(block, { refData }) {
     (data.javascript || data.preloadScripts.length > 0) && !this.engine.isMV2;
   const payload = {
     ...block,
-    data,
+    data: {
+      ...data,
+      automaScript: getAutomaScript({ ...refData, secrets: {} }),
+    },
     preloadCSS: data.preloadScripts.filter((item) => item.type === 'style'),
   };
 
   if (isMV3) {
     payload.data.dontInjectJS = true;
-    payload.data.automaScript = getAutomaScript({ ...refData, secrets: {} });
   }
 
   await this._sendMessageToTab(payload, {}, data.runBeforeLoad ?? false);
